@@ -1,0 +1,11 @@
+@import url(/public/styles/global.css);
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container p {
+    margin-bottom: 30px;
+}

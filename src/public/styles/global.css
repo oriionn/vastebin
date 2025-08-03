@@ -1,0 +1,40 @@
+@import url(https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css);
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Fira Code', monospace;
+    color: white;
+}
+
+body, head {
+    background: #1C1B22;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+}
+
+input {
+    outline: none;
+    padding: 5px 10px;
+    background-color: transparent;
+    border: 1px white dotted;
+    border-radius: 10px;
+    margin-top: 5px;
+}
+
+button {
+    padding: 5px 10px;
+    outline: none;
+    cursor: pointer;
+
+    border: 1px white dotted;
+    border-radius: 10px;
+    background: transparent;
+}
+
+button:hover {
+    border-style: solid;
+}
