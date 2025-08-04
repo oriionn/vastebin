@@ -6,6 +6,7 @@ vastebin
 *.so
 *.dylib
 *.dll
+src/src
 
 # Ignore binary output folders
 bin/

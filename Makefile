@@ -1,0 +1,2 @@
+dev:
+	v run src/
