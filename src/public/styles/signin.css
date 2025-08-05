@@ -18,3 +18,7 @@ label {
 button {
     margin-top: 15px;
 }
+
+.container {
+    width: 250px;
+}

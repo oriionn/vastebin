@@ -21,3 +21,12 @@ pub fn (app &App) create_session(user_id int, ip string) !string {
 
 	return uuid
 }
+
+pub fn (app &App) delete_session(session_id int) bool {
+	sql app.database {
+		delete from Session where id == session_id
+	} or {
+		return false
+	}
+	return true
+}

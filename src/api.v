@@ -105,3 +105,29 @@ pub fn (app &App) api_signin(mut ctx Context) veb.Result {
 		message: session
 	})
 }
+
+@['/api/session'; get]
+pub fn (app &App) api_session(mut ctx Context) veb.Result {
+	return ctx.json(BaseResponse{
+		status: int(http.Status.ok),
+		message: ctx.auth.str()
+	})
+}
+
+@['/api/username'; get]
+pub fn (app &App) api_username(mut ctx Context) veb.Result {
+	query_username := ctx.query['u'] or {
+		return ctx.custom_error(http.Status.bad_request, "Invalid query")
+	}
+
+	users := sql app.database {
+		select from User where username == query_username
+	} or {
+		return ctx.internal_err()
+	}
+
+	return ctx.json(BaseResponse{
+		status: int(http.Status.ok),
+		message: (users.len == 0).str()
+	})
+}

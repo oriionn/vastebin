@@ -38,3 +38,18 @@ button {
 button:hover {
     border-style: solid;
 }
+
+#error {
+    margin-top: 10px;
+    width: 100%;
+    color: #ff2643;
+    font-size: 10px;
+}
+
+#return {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    width: 48px;
+    cursor: pointer;
+}

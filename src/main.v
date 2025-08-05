@@ -8,10 +8,13 @@ const __dirname = os.dir(os.executable())
 
 pub struct Context {
 	veb.Context
+	pub mut:
+		auth bool
 }
 
 pub struct App {
 	veb.StaticHandler
+	veb.Middleware[Context]
 	mut:
 		database sqlite.DB
 }
@@ -52,6 +55,7 @@ fn main() {
 	}
 
 	app.mount_static_folder_at(os.join_path(__dirname, 'public'), '/public')!
+	app.use(handler: app.auth)
 
 	// Pass the App and context type and start the web server on port 8080
 	veb.run[App, Context](mut app, 8080)
