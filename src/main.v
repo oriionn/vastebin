@@ -56,6 +56,7 @@ fn main() {
 
 	app.mount_static_folder_at(os.join_path(__dirname, 'public'), '/public')!
 	app.use(handler: app.auth)
+	app.use(handler: app.logger)
 
 	// Pass the App and context type and start the web server on port 8080
 	veb.run[App, Context](mut app, 8080)
