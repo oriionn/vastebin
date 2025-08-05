@@ -1,0 +1,32 @@
+@import url(/public/styles/global.css);
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+h2 {
+    margin-top: 30px;
+    margin-bottom: 10px;
+}
+
+table {
+    border: 1px white dotted;
+    border-collapse: separate;
+    border-spacing: 25px 15px;
+    border-radius: 10px;
+
+    display: block;
+    max-height: 250px;
+    overflow-y: auto;
+    margin-bottom: 10px;
+}
+
+table th {
+    text-align: left;
+}
+
+button {
+    float: right;
+}

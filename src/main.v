@@ -35,6 +35,11 @@ pub fn (app &App) signup(mut ctx Context) veb.Result {
 	return render(mut ctx, 'signup')
 }
 
+@["/dashboard"; get]
+pub fn (app &App) dashboard(mut ctx Context) veb.Result {
+	return render(mut ctx, 'dashboard')
+}
+
 fn main() {
 	db := init_db() or {
 		println(err)

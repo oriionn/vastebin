@@ -31,7 +31,7 @@ pub fn (app &App) api_signup(mut ctx Context) veb.Result {
     mut users := sql app.database {
     	select from User where username == body.username limit 1
     } or {
-    	return ctx.custom_error(http.Status.internal_server_error, "Internal server error")
+    	return ctx.internal_err()
     }
 
     if users.len != 0 {
@@ -39,7 +39,7 @@ pub fn (app &App) api_signup(mut ctx Context) veb.Result {
     }
 
     hash_password := bcrypt.generate_from_password(body.password.bytes(), bcrypt_cost) or {
-    	return ctx.custom_error(http.Status.internal_server_error, "Internal server error")
+    	return ctx.internal_err()
     }
 
     mut user := User{
@@ -50,21 +50,57 @@ pub fn (app &App) api_signup(mut ctx Context) veb.Result {
     sql app.database {
     	insert user into User
     } or {
-    	return ctx.custom_error(http.Status.internal_server_error, "Internal server error")
+    	return ctx.internal_err()
     }
 
     users = sql app.database {
     	select from User where username == body.username limit 1
     } or {
-    	return ctx.custom_error(http.Status.internal_server_error, "Internal server error")
+    	return ctx.internal_err()
     }
 
     user = users[0]
     session := app.create_session(user.id, ctx.ip()) or {
-    	return ctx.custom_error(http.Status.internal_server_error, "Internal server error")
+    	return ctx.internal_err()
     }
 
 	return ctx.json(BaseResponse{
+		status: int(http.Status.ok),
+		message: session
+	})
+}
+
+@["/api/sign-in"; post]
+pub fn (app &App) api_signin(mut ctx Context) veb.Result {
+	raw_body := ctx.req.data
+	body := json.decode(SignInBody, raw_body) or {
+		return ctx.custom_error(http.Status.bad_request, "Invalid body")
+	}
+
+	if body.username == "" || body.password == "" {
+		return ctx.custom_error(http.Status.bad_request, "Invalid body")
+	}
+
+	mut users := sql app.database {
+    	select from User where username == body.username limit 1
+    } or {
+    	return ctx.internal_err()
+    }
+
+    if users.len == 0 {
+    	return ctx.custom_error(http.Status.not_found, "Invalid username")
+    }
+    user := users[0]
+
+    bcrypt.compare_hash_and_password(body.password.bytes(), user.password.bytes()) or {
+    	return ctx.custom_error(http.Status.forbidden, "Invalid password")
+    }
+
+    session := app.create_session(user.id, ctx.ip()) or {
+    	return ctx.internal_err()
+    }
+
+    return ctx.json(BaseResponse{
 		status: int(http.Status.ok),
 		message: session
 	})

@@ -19,3 +19,7 @@ pub fn (mut ctx Context) custom_error(status http.Status, message string) veb.Re
 
 	return ctx.json(json.encode(body))
 }
+
+pub fn (mut ctx Context) internal_err() veb.Result {
+	return ctx.custom_error(http.Status.internal_server_error, "Internal Server Error")
+}
