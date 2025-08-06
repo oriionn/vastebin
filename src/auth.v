@@ -45,3 +45,5 @@ pub fn (app &App) auth(mut ctx Context) bool {
 	ctx.auth = true
 	return true
 }
+
+// test
