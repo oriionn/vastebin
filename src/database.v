@@ -27,6 +27,7 @@ struct Paste {
 	id int @[primary; serial]
 	user_id int
 	content string
+	views int @[default: 0]
 	created_at time.Time @[default: '(unixepoch())']
 }
 

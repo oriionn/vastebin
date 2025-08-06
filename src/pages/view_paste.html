@@ -3,13 +3,13 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Vastebin - Create paste</title>
+	<title>Vastebin - Paste</title>
 
 	<link rel="stylesheet" href="/public/styles/paste.css">
 
+    <script>const id = {id};</script>
 	<script src="/public/scripts/global.js" defer></script>
-    <script src="/public/scripts/need_auth.js" defer></script>
-    <script src="/public/scripts/create_paste.js" defer></script>
+    <script src="/public/scripts/view_paste.js" defer></script>
 </head>
 <body>
     <nav>
@@ -27,8 +27,11 @@
             </svg>
         </div>
         <span id="error"></span>
-        <button id="submit">Create</button>
+        <div class="actions">
+            <button id="copy">Copy content</button>
+            <button id="raw">View raw</button>
+        </div>
     </nav>
-    <textarea></textarea>
+    <textarea disabled></textarea>
 </body>
 </html>

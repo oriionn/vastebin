@@ -4,6 +4,7 @@ import veb
 import json
 import crypto.bcrypt
 import net.http
+import time
 
 const bcrypt_cost = 12
 
@@ -16,6 +17,20 @@ struct SignInBody {
 struct PasteBody {
 	mut:
 		content string
+}
+
+struct PasteResponse {
+	mut:
+		status int
+		message string 
+		data []PasteInResponse
+}
+
+struct PasteInResponse {
+	mut:
+		id int
+		views int
+		created_at time.Time
 }
 
 @["/api/sign-up"; post]
@@ -159,6 +174,31 @@ pub fn (app &App) api_paste_post(mut ctx Context) veb.Result {
 	return ctx.json(BaseResponse{
 		status: int(http.Status.ok),
 		message: paste_id.str()
+	})
+}
+
+@['/api/paste'; get]
+pub fn (app &App) api_paste_get(mut ctx Context) veb.Result {
+	if ctx.auth != true {
+		return ctx.custom_error(http.Status.forbidden, "Forbidden")
+	}
+
+	raw_pastes := sql app.database {
+		select from Paste where user_id == ctx.user
+	} or {
+		return ctx.internal_err()
+	}
+
+	pastes := raw_pastes.map(PasteInResponse{
+		id: it.id,
+		views: it.views,
+		created_at: it.created_at
+	})
+
+	return ctx.json(PasteResponse{
+		status: int(http.Status.ok),
+		message: "Here is the list of your pastes: ",
+		data: pastes
 	})
 }
 

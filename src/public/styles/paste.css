@@ -38,3 +38,7 @@ textarea:focus {
     width: auto;
     font-size: 15px;
 }
+
+textarea:disabled {
+    cursor: text;
+}

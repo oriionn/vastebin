@@ -20,33 +20,66 @@ pub struct App {
 		database sqlite.DB
 }
 
-pub fn render(mut ctx Context, page string) veb.Result {
-	return ctx.file(os.join_path(__dirname, 'pages', page + '.html'))
+pub fn (mut ctx Context) render(page string, id ?int) veb.Result {
+	current_id := id or { 0 }
+
+	path := os.join_path(__dirname, 'pages', page + '.html')
+	if current_id == 0 {
+		return ctx.file(path)
+	}
+
+	mut content := os.read_file(path) or {
+		return ctx.text("Internal Server Error")
+	}
+	content = content.replace("{id}", current_id.str())
+	return ctx.html(content)
 }
 
 @[get]
 pub fn (app &App) index(mut ctx Context) veb.Result {
-	return render(mut ctx, 'index')
+	return ctx.render('index', none)
 }
 
 @["/sign-in"; get]
 pub fn (app &App) signin(mut ctx Context) veb.Result {
-	return render(mut ctx, 'signin')
+	return ctx.render('signin', none)
 }
 
 @["/sign-up"; get]
 pub fn (app &App) signup(mut ctx Context) veb.Result {
-	return render(mut ctx, 'signup')
+	return ctx.render('signup', none)
 }
 
 @["/dashboard"; get]
 pub fn (app &App) dashboard(mut ctx Context) veb.Result {
-	return render(mut ctx, 'dashboard')
+	return ctx.render('dashboard', none)
 }
 
 @["/create"; get]
 pub fn (app &App) create(mut ctx Context) veb.Result {
-	return render(mut ctx, 'create_paste')
+	return ctx.render('create_paste', none)
+}
+
+@["/paste/:id"; get]
+pub fn (app &App) view_paste(mut ctx Context, id int) veb.Result {
+	if app.paste_exists(id) == false {
+		return ctx.text("No found")
+	}
+	return ctx.render('view_paste', id)
+}
+
+@["/raw/:id"; get]
+pub fn (app &App) raw_paste(mut ctx Context, paste_id int) veb.Result {
+	if app.paste_exists(paste_id) == false {
+		return ctx.text("No found")
+	}
+	paste := sql app.database {
+		select from Paste where id == paste_id
+	} or {
+		return ctx.text("No found")
+	}
+
+	return ctx.text(paste[0].content)
 }
 
 fn main() {
