@@ -3,6 +3,7 @@ module main
 import veb
 import os
 import db.sqlite
+import net.http
 
 const __dirname = os.dir(os.executable())
 
@@ -29,7 +30,7 @@ pub fn (mut ctx Context) render(page string, id ?int) veb.Result {
 	}
 
 	mut content := os.read_file(path) or {
-		return ctx.text("Internal Server Error")
+		return ctx.error_page(http.Status.internal_server_error)
 	}
 	content = content.replace("{id}", current_id.str())
 	return ctx.html(content)
@@ -63,7 +64,7 @@ pub fn (app &App) create(mut ctx Context) veb.Result {
 @["/paste/:id"; get]
 pub fn (app &App) view_paste(mut ctx Context, id int) veb.Result {
 	if app.paste_exists(id) == false {
-		return ctx.text("No found")
+		return ctx.error_page(http.Status.not_found)
 	}
 	return ctx.render('view_paste', id)
 }
@@ -71,12 +72,12 @@ pub fn (app &App) view_paste(mut ctx Context, id int) veb.Result {
 @["/raw/:id"; get]
 pub fn (app &App) raw_paste(mut ctx Context, paste_id int) veb.Result {
 	if app.paste_exists(paste_id) == false {
-		return ctx.text("No found")
+		return ctx.error_page(http.Status.not_found)
 	}
 	paste := sql app.database {
 		select from Paste where id == paste_id
 	} or {
-		return ctx.text("No found")
+		return ctx.error_page(http.Status.not_found)
 	}
 
 	return ctx.text(paste[0].content)
