@@ -9,11 +9,12 @@
 
     <script src="/public/scripts/global.js" defer></script>
     <script src="/public/scripts/need_auth.js" defer></script>
+    <script src="/public/scripts/dashboard.js" defer></script>
 </head>
 <body>
     <div class="container">
         <div class="title">
-            <h1>Hello Orion !</h1>
+            <h1 data-text="Hello {username}!">Hello John!</h1>
             <div class="settings"></div>
         </div>
         <h2>Your pastes</h2>
@@ -85,7 +86,7 @@
                 </tr>
             </tbody>
         </table>
-        <button>New paste</button>
+        <button onclick="window.location.href='/create';">New paste</button>
     </div>
 </body>
 </html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Vastebin - Create paste</title>
+
+	<link rel="stylesheet" href="/public/styles/create_paste.css">
+
+	<script src="/public/scripts/global.js" defer></script>
+    <script src="/public/scripts/need_auth.js" defer></script>
+    <script src="/public/scripts/create_paste.js" defer></script>
+</head>
+<body>
+    <nav>
+        <div id="return" onclick="window.location.href = '/dashboard';">
+            <svg viewBox="0 0 22 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 9H6V10H4V9Z" fill="white"/>
+                <path d="M3 8H6V9H3V8Z" fill="white"/>
+                <path d="M2 7H5V8H2V7Z" fill="white"/>
+                <path d="M1 6H4V7H1V6Z" fill="white"/>
+                <path d="M1 3H4V4H1V3Z" fill="white"/>
+                <path d="M2 2H5V3H2V2Z" fill="white"/>
+                <path d="M3 1H6V2H3V1Z" fill="white"/>
+                <path d="M4 0H6V1H4V0Z" fill="white"/>
+                <path d="M0 4H22V6H0V4Z" fill="white"/>
+            </svg>
+        </div>
+        <span id="error"></span>
+        <button id="submit">Create</button>
+    </nav>
+    <textarea></textarea>
+</body>
+</html>

@@ -44,6 +44,11 @@ pub fn (app &App) dashboard(mut ctx Context) veb.Result {
 	return render(mut ctx, 'dashboard')
 }
 
+@["/create"; get]
+pub fn (app &App) create(mut ctx Context) veb.Result {
+	return render(mut ctx, 'create_paste')
+}
+
 fn main() {
 	db := init_db() or {
 		println(err)

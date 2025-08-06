@@ -1,0 +1,40 @@
+@import url(/public/styles/global.css);
+
+nav {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+nav button {
+    margin-right: 10px;
+    margin-top: 10px;
+}
+
+#return {
+    position: initial;
+    margin-left: 10px;
+    margin-top: 12px;
+}
+
+textarea {
+    margin: 10px;
+    padding: 20px;
+    width: calc(100% - 10px * 2 - 5px - 20px * 2);
+    height: calc(100% - 75px - 20px * 2);
+
+    border-radius: 10px;
+    background: #16151a;
+    outline: none;
+    border: 1px white dotted;
+}
+
+textarea:focus {
+    border-style: solid;
+}
+
+#error {
+    width: auto;
+    font-size: 15px;
+}

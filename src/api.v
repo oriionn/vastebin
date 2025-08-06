@@ -131,7 +131,7 @@ pub fn (app &App) api_username(mut ctx Context) veb.Result {
 }
 
 @['/api/paste'; post]
-pub fn (app &App) api_paste(mut ctx Context) veb.Result {
+pub fn (app &App) api_paste_post(mut ctx Context) veb.Result {
 	raw_body := ctx.req.data
 	body := json.decode(PasteBody, raw_body) or {
 		return ctx.custom_error(http.Status.bad_request, "Invalid body")
@@ -142,7 +142,7 @@ pub fn (app &App) api_paste(mut ctx Context) veb.Result {
 	}
 
 	if ctx.auth != true {
-		return ctx.custom_error(http.Status.forbidden, "No session provided")
+		return ctx.custom_error(http.Status.forbidden, "Forbidden")
 	}
 
 	paste := Paste{
@@ -159,5 +159,25 @@ pub fn (app &App) api_paste(mut ctx Context) veb.Result {
 	return ctx.json(BaseResponse{
 		status: int(http.Status.ok),
 		message: paste_id.str()
+	})
+}
+
+@['/api/me'; get]
+pub fn (app &App) api_me(mut ctx Context) veb.Result {
+	if ctx.auth != true {
+		return ctx.custom_error(http.Status.forbidden, "Forbidden")
+	}
+
+	users := sql app.database {
+		select from User where id == ctx.user limit 1
+	} or {
+		return ctx.internal_err()
+	}
+
+	user := users[0]
+
+	return ctx.json(BaseResponse{
+		status: int(http.Status.ok),
+		message: user.username
 	})
 }
