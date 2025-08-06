@@ -41,6 +41,7 @@ pub fn (app &App) auth(mut ctx Context) bool {
 		return true
 	}
 
+	ctx.user = session_db[0].user_id
 	ctx.auth = true
 	return true
 }

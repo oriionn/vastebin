@@ -13,6 +13,11 @@ struct SignInBody {
 		password string
 }
 
+struct PasteBody {
+	mut:
+		content string
+}
+
 @["/api/sign-up"; post]
 pub fn (app &App) api_signup(mut ctx Context) veb.Result {
 	raw_body := ctx.req.data
@@ -47,20 +52,13 @@ pub fn (app &App) api_signup(mut ctx Context) veb.Result {
 		password: hash_password
     }
 
-    sql app.database {
+    user_id := sql app.database {
     	insert user into User
     } or {
     	return ctx.internal_err()
     }
 
-    users = sql app.database {
-    	select from User where username == body.username limit 1
-    } or {
-    	return ctx.internal_err()
-    }
-
-    user = users[0]
-    session := app.create_session(user.id, ctx.ip()) or {
+    session := app.create_session(user_id, ctx.ip()) or {
     	return ctx.internal_err()
     }
 
@@ -129,5 +127,37 @@ pub fn (app &App) api_username(mut ctx Context) veb.Result {
 	return ctx.json(BaseResponse{
 		status: int(http.Status.ok),
 		message: (users.len == 0).str()
+	})
+}
+
+@['/api/paste'; post]
+pub fn (app &App) api_paste(mut ctx Context) veb.Result {
+	raw_body := ctx.req.data
+	body := json.decode(PasteBody, raw_body) or {
+		return ctx.custom_error(http.Status.bad_request, "Invalid body")
+	}
+
+	if body.content == "" {
+		return ctx.custom_error(http.Status.bad_request, "Invalid body")
+	}
+
+	if ctx.auth != true {
+		return ctx.custom_error(http.Status.forbidden, "No session provided")
+	}
+
+	paste := Paste{
+		user_id: ctx.user,
+		content: body.content
+	}
+
+	paste_id := sql app.database {
+		insert paste into Paste
+	} or {
+		return ctx.internal_err()
+	}
+
+	return ctx.json(BaseResponse{
+		status: int(http.Status.ok),
+		message: paste_id.str()
 	})
 }

@@ -22,6 +22,14 @@ struct Session {
 	expire_at time.Time
 }
 
+@[table: 'pastes']
+struct Paste {
+	id int @[primary; serial]
+	user_id int
+	content string
+	created_at time.Time @[default: '(unixepoch())']
+}
+
 pub fn init_db() !sqlite.DB {
 	db_path := os.join_path(__dirname, "vastebin.db")
 	db := sqlite.connect(db_path)!
@@ -29,6 +37,7 @@ pub fn init_db() !sqlite.DB {
 	sql db {
 		create table User
 		create table Session
+		create table Paste
 	}!
 
 	return db

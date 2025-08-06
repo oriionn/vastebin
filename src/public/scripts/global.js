@@ -8,5 +8,5 @@ function showError(text) {
 }
 
 function redirect(url) {
-    window.location.href = "/dashboard";
+    window.location.href = url;
 }

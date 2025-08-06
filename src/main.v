@@ -10,6 +10,7 @@ pub struct Context {
 	veb.Context
 	pub mut:
 		auth bool
+		user int
 }
 
 pub struct App {
