@@ -5,6 +5,7 @@ import os
 import db.sqlite
 import net.http
 import v.embed_file
+import flag
 
 const __dirname = os.dir(os.executable())
 
@@ -88,6 +89,19 @@ pub fn (app &App) raw_paste(mut ctx Context, paste_id int) veb.Result {
 }
 
 fn main() {
+	mut fp := flag.new_flag_parser(os.args)
+	fp.application("vastebin")
+	fp.description("A lightweight pastebin alternative written in V")
+	fp.version("1.0.0")
+	fp.skip_executable()
+
+	port := fp.int("port", `p`, 8080, "Listening port for web server")
+	fp.finalize() or {
+        eprintln(err)
+        println(fp.usage())
+        return
+    }
+
 	db := init_db() or {
 		println(err)
 		println("Error occurred when the database connection was initializing")
@@ -101,5 +115,5 @@ fn main() {
 	app.use(handler: app.auth)
 	app.use(handler: app.logger)
 
-	veb.run[App, Context](mut app, 8080)
+	veb.run[App, Context](mut app, port)
 }
