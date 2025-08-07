@@ -1,7 +1,7 @@
 # Vastebin
 A lightweight pastebin alternative written in V. 
 
-The executable, compiled on my Arch Linux, is 2.1MB in size.
+The executable, compiled on my Arch Linux, is 4.3MB in size.
 
 ## Installation
 ### Prerequisites
