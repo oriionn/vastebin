@@ -20,5 +20,5 @@ submit.addEventListener("click", async () => {
 
     let json = await res.json();
     if (res.status !== 200) return showError(JSON.parse(json).message);
-    showError(json.message)
+    redirect(`/paste/${json.message}`)
 });
