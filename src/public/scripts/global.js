@@ -4,7 +4,7 @@ function isValueInvalid(value) {
 
 function showError(text) {
     const errorEl = document.getElementById("error");
-    errorEl.innerText = text;
+    errorEl.textContent = text;
 }
 
 function redirect(url) {

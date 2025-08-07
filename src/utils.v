@@ -10,6 +10,8 @@ struct BaseResponse {
 	message string
 }
 
+const error_html = $embed_file("pages/error.html")
+
 pub fn (mut ctx Context) custom_error(status http.Status, message string) veb.Result {
 	ctx.res.set_status(status)
 
@@ -26,11 +28,7 @@ pub fn (mut ctx Context) internal_err() veb.Result {
 }
 
 pub fn (mut ctx Context) error_page(status http.Status) veb.Result {
-	path := os.join_path(__dirname, 'pages', 'error.html')
-
-	mut content := os.read_file(path) or {
-		return ctx.text("Internal Server Error")
-	}
+	mut content := error_html.to_string()
 	content = content.replace("{code}", int(status).str())
 	content = content.replace("{error}", status.str())
 	return ctx.html(content)
