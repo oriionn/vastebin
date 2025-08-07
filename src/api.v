@@ -14,6 +14,11 @@ struct SignInBody {
 		password string
 }
 
+struct PasswordBody {
+	mut:
+		password string
+}
+
 struct PasteBody {
 	mut:
 		content string
@@ -245,5 +250,42 @@ pub fn (app &App) api_me(mut ctx Context) veb.Result {
 	return ctx.json(BaseResponse{
 		status: int(http.Status.ok),
 		message: user.username
+	})
+}
+
+@["/api/password"; post]
+pub fn (app &App) api_password(mut ctx Context) veb.Result {
+	if ctx.auth != true {
+		return ctx.custom_error(http.Status.forbidden, "Forbidden")	
+	}
+
+	raw_body := ctx.req.data
+	body := json.decode(PasswordBody, raw_body) or {
+		return ctx.custom_error(http.Status.bad_request, "Invalid body")
+	}
+
+	if body.password == "" {
+		return ctx.custom_error(http.Status.bad_request, "Invalid body")
+	}
+
+	hash_password := bcrypt.generate_from_password(body.password.bytes(), bcrypt_cost) or {
+    	return ctx.internal_err()
+    }
+
+	sql app.database {
+		delete from Session where user_id == ctx.user
+	} or {
+		ctx.internal_err()
+	}
+
+	sql app.database {
+		update User set password = hash_password where id == ctx.user
+	} or {
+		ctx.internal_err()
+	}
+
+	return ctx.json(BaseResponse{
+		status: int(http.Status.ok),
+		message: "Password changed"
 	})
 }

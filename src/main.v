@@ -30,6 +30,7 @@ const signin_html = $embed_file("pages/signin.html")
 const signup_html = $embed_file("pages/signup.html")
 const view_paste_html = $embed_file("pages/view_paste.html")
 const delete_html = $embed_file("pages/delete.html")
+const password_html = $embed_file("pages/change_password.html")
 
 pub fn (mut ctx Context) render(file embed_file.EmbedFileData, id ?int) veb.Result {
 	current_id := id or { 0 }
@@ -67,6 +68,11 @@ pub fn (app &App) signup(mut ctx Context) veb.Result {
 @["/dashboard"; get]
 pub fn (app &App) dashboard(mut ctx Context) veb.Result {
 	return ctx.render(dashboard_html, none)
+}
+
+@["/dashboard/password"]
+pub fn (app &App) password(mut ctx Context) veb.Result {
+	return ctx.render(password_html, none)
 }
 
 @["/create"; get]

@@ -1,5 +1,12 @@
 const header = document.querySelector("h1");
 const tbody = document.querySelector("tbody");
+const logoutButton = document.getElementById("logout");
+
+logoutButton.addEventListener("click", (e) => {
+    e.preventDefault();
+    localStorage.removeItem("session");
+    redirect("/");
+});
 
 async function init_dashboard() {
     await edit_header();

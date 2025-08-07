@@ -12,6 +12,7 @@ const signin_js = $embed_file("public/scripts/signin.js")
 const signup_js = $embed_file("public/scripts/signup.js")
 const view_paste_js = $embed_file("public/scripts/view_paste.js")
 const index_js = $embed_file("public/scripts/index.js")
+const change_password_js = $embed_file("public/scripts/change_password.js")
 
 const dashboard_css = $embed_file("public/styles/dashboard.css")
 const error_css = $embed_file("public/styles/error.css")
@@ -71,6 +72,11 @@ pub fn (app &App) view_paste_js(mut ctx Context) veb.Result {
 @["/public/scripts/index.js"; get]
 pub fn (app &App) index_js(mut ctx Context) veb.Result {
 	return ctx.javascript(index_js)
+}
+
+@["/public/scripts/change_password.js"; get]
+pub fn (app &App) change_password_js(mut ctx Context) veb.Result {
+	return ctx.javascript(change_password_js)
 }
 
 @["/public/styles/dashboard.css"; get]

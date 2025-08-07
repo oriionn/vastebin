@@ -53,3 +53,11 @@ button:hover {
     width: 48px;
     cursor: pointer;
 }
+
+a {
+    text-decoration-style: dotted;
+}
+
+a:hover {
+    text-decoration-style: solid;
+}
