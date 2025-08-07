@@ -35,6 +35,10 @@ struct PasteInResponse {
 
 @["/api/sign-up"; post]
 pub fn (app &App) api_signup(mut ctx Context) veb.Result {
+	if app.disable_sign_up {
+		return ctx.not_found()
+	}
+
 	raw_body := ctx.req.data
 	body := json.decode(SignInBody, raw_body) or {
 		return ctx.custom_error(http.Status.bad_request, "Invalid body")
@@ -199,6 +203,28 @@ pub fn (app &App) api_paste_get(mut ctx Context) veb.Result {
 		status: int(http.Status.ok),
 		message: "Here is the list of your pastes: ",
 		data: pastes
+	})
+}
+
+@['/api/paste/:id'; delete]
+pub fn (app &App) api_paste_delete(mut ctx Context, paste_id int) veb.Result {
+	if ctx.auth != true {
+		return ctx.custom_error(http.Status.forbidden, "Forbidden")
+	}
+
+	if app.paste_exists(paste_id) == false {
+		return ctx.custom_error(http.Status.not_found, "Not Found")
+	}
+
+	sql app.database {
+		delete from Paste where id == paste_id
+	} or {
+		return ctx.internal_err()
+	}
+
+	return ctx.json(BaseResponse{
+		status: int(http.Status.ok),
+		message: "Paste deleted"
 	})
 }
 

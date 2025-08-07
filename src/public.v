@@ -11,6 +11,7 @@ const no_auth_js = $embed_file("public/scripts/no_auth.js")
 const signin_js = $embed_file("public/scripts/signin.js")
 const signup_js = $embed_file("public/scripts/signup.js")
 const view_paste_js = $embed_file("public/scripts/view_paste.js")
+const index_js = $embed_file("public/scripts/index.js")
 
 const dashboard_css = $embed_file("public/styles/dashboard.css")
 const error_css = $embed_file("public/styles/error.css")
@@ -65,6 +66,11 @@ pub fn (app &App) signup_js(mut ctx Context) veb.Result {
 @["/public/scripts/view_paste.js"; get]
 pub fn (app &App) view_paste_js(mut ctx Context) veb.Result {
 	return ctx.javascript(view_paste_js)
+}
+
+@["/public/scripts/index.js"; get]
+pub fn (app &App) index_js(mut ctx Context) veb.Result {
+	return ctx.javascript(index_js)
 }
 
 @["/public/styles/dashboard.css"; get]

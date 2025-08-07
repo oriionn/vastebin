@@ -1,0 +1,25 @@
+<script>
+    function redirect(url) {
+        window.location.href = url;
+    }
+
+    async function main() {
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get('id');
+
+        if (!id) return redirect("/not_found");
+        let res = await fetch(`/api/paste/${id}`, {
+            method: "DELETE",
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("session")}`
+            }
+        });
+
+        if (!res.ok) return redirect("/not_found");
+        if (res.status !== 200) return redirect("/not_found");
+
+        redirect("/dashboard");
+    }
+
+    main();
+</script>

@@ -30,3 +30,15 @@ table th {
 button {
     float: right;
 }
+
+.actions {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+@media (max-width: 540px) {
+    .container {
+        width: calc(100% - 30px)
+    }
+}

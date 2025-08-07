@@ -9,3 +9,13 @@ body {
 .container p {
     margin-bottom: 30px;
 }
+
+#sign-up-button {
+    visibility: hidden;
+}
+
+@media (max-width: 475px) {
+    .container {
+        width: calc(100% - 30px);
+    }
+}

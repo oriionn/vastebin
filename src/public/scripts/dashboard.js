@@ -46,14 +46,21 @@ async function edit_table() {
         
         tdId.textContent = paste.id;
         tdViews.textContent = paste.views;
-        console.log(paste)
         tdCreatedAt.textContent = dayjs(paste.created_at * 1000).local().format('DD/MM/YYYY HH:mm:ss');
 
         let viewAction = document.createElement("a");
         viewAction.href = `/paste/${paste.id}`;
         viewAction.textContent = "View";
-        viewAction.target = "_blank"
+        viewAction.target = "_blank";
+        
+        let deleteAction = document.createElement("a");
+        deleteAction.href = `/actions/delete?id=${paste.id}`;
+        deleteAction.textContent = "Delete";
+
         tdActions.appendChild(viewAction);
+        tdActions.appendChild(deleteAction);
+        tdActions.classList.add("actions");
+
 
         tr.appendChild(tdId);
         tr.appendChild(tdViews);

@@ -20,6 +20,7 @@ pub struct App {
 	veb.Middleware[Context]
 	mut:
 		database sqlite.DB
+		disable_sign_up bool
 }
 
 const create_paste_html = $embed_file("pages/create_paste.html")
@@ -28,6 +29,7 @@ const index_html = $embed_file("pages/index.html")
 const signin_html = $embed_file("pages/signin.html")
 const signup_html = $embed_file("pages/signup.html")
 const view_paste_html = $embed_file("pages/view_paste.html")
+const delete_html = $embed_file("pages/delete.html")
 
 pub fn (mut ctx Context) render(file embed_file.EmbedFileData, id ?int) veb.Result {
 	current_id := id or { 0 }
@@ -43,7 +45,10 @@ pub fn (mut ctx Context) render(file embed_file.EmbedFileData, id ?int) veb.Resu
 
 @[get]
 pub fn (app &App) index(mut ctx Context) veb.Result {
-	return ctx.render(index_html, none)
+	enabled_sign_up := !app.disable_sign_up
+	mut content := index_html.to_string()
+	content = content.replace("{enabled}", enabled_sign_up.str())
+	return ctx.html(content)
 }
 
 @["/sign-in"; get]
@@ -53,6 +58,9 @@ pub fn (app &App) signin(mut ctx Context) veb.Result {
 
 @["/sign-up"; get]
 pub fn (app &App) signup(mut ctx Context) veb.Result {
+	if app.disable_sign_up {
+		return ctx.error_page(http.Status.not_found)
+	}
 	return ctx.render(signup_html, none)
 }
 
@@ -85,8 +93,24 @@ pub fn (app &App) raw_paste(mut ctx Context, paste_id int) veb.Result {
 		return ctx.error_page(http.Status.not_found)
 	}
 
+	sql app.database {
+		update Paste set views = views + 1 where id == paste_id
+	} or {
+		ctx.internal_err()
+	}
+
 	return ctx.text(paste[0].content)
 }
+
+@["/actions/delete"]
+pub fn (app &App) delete_paste(mut ctx Context) veb.Result {
+	return ctx.render(delete_html, none)
+}
+
+@["/not_found"; get] 
+pub fn (app &App) custom_not_found(mut ctx Context) veb.Result {
+	return ctx.error_page(http.Status.not_found)
+} 
 
 fn main() {
 	mut fp := flag.new_flag_parser(os.args)
@@ -96,6 +120,7 @@ fn main() {
 	fp.skip_executable()
 
 	port := fp.int("port", `p`, 8080, "Listening port for web server")
+	disable_sign_up := fp.bool("disable-sign-up", `d`, false, "Disable sign up")
 	fp.finalize() or {
         eprintln(err)
         println(fp.usage())
@@ -110,6 +135,7 @@ fn main() {
 
 	mut app := &App{
 		database: db
+		disable_sign_up: disable_sign_up
 	}
 
 	app.use(handler: app.auth)

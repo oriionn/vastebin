@@ -7,8 +7,10 @@
 
 	<link rel="stylesheet" href="/public/styles/index.css">
 
+    <script>const sign_up = {enabled};</script> 
 	<script src="/public/scripts/global.js" defer></script>
     <script src="/public/scripts/no_auth.js" defer></script>
+    <script src="/public/scripts/index.js" defer></script>
 </head>
 <body>
     <div class="container">
@@ -16,7 +18,7 @@
         <p>Do you have an account ?</p>
         <div class="actions">
             <button onclick="window.location.href = '/sign-in';">Sign in</button>
-            <button onclick="window.location.href = '/sign-up';">Sign up</button>
+            <button onclick="window.location.href = '/sign-up';" id="sign-up-button">Sign up</button>
         </div>
     </div>
 </body>
